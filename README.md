@@ -9,9 +9,13 @@ Contact: Daisuke Kihara (dkihara@purdue.edu)
 
 ## Pre-required software
 Python 3: https://www.python.org/downloads/
+
 Numpy: pip/conda install numpy
+
 SciPy: pip/conda install scipy
+
 FFTW: http://www.fftw.org/download.html
+
 Pymol (for visualization): https://pymol.org/2/
 
 ## VESPER protocol
