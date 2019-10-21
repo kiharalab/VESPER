@@ -125,15 +125,19 @@ Two sample map files can be found in example_data/ folder.
 **Output format:**
 By default, VESPER writes the vector information for each of top 10 models after local refinement into VESPER output. Vector information for the first model starts with two lines like the ones shown below.
 
+```
 #0 R={0.0 0.0 5.0} MTX={0.996194700 -0.087155725 0.000000000 0.087155725 0.996194700 0.000000000 -0.000000000 0.000000000 1.000000000} T={37.335 24.247 93.200} sco= 144.563 zsco= 10.477247
 Overlap= 0.0871 249/2859 CC= 0.206020 PCC= 0.068408 Score= 144.6
+```
 
 In the first line, 0 is the index of the first model. Here the model index starts from 0. MTX shows the rotation matrix of MAP2 relative to MAP1. T shows the translation vector of MAP2 relative to MAP1. sco shows the DOT score, which is the summation of dot products of matched vectors. zsco shows the non-normalized z-score. In the second line, Overlap shows the percentage of overlapped pixels between two maps. CC shows the correlation coefficient where density values are not normalized around the mean. PCC shows the Pearson correlation coefficient. Score is the same as sco, which shows the DOT score.
 
 After these two lines, the output file shows the vector information for the first model. Each vector is represented by two atoms, one for start position (CA) and one for end  (CB). The number in the last column shows the fitness score, which is dot product between this vector and the matched vector in MAP1. Fitness score ranges from -1 to 1: 1 for a perfect match, 0 if two vectors are perpendicular or there is no matched vector, and -1 if two vectors are in the opposite direction. One example is shown below. In this case, there is no matched vector in MAP1 for this specific vector. Thus, fitness score in the last column is 0.00.
 
+```
 ATOM      1  CA  ALA     1     101.600 164.600 248.600  1.00  0.00
 ATOM      2  CB  ALA     1     106.065 166.626 243.604  1.00  0.00
+```
 
 **Usage:**
 ```
