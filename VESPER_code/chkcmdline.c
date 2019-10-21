@@ -30,8 +30,8 @@ int chkcmdline( int argc, char **argv,CMD *cmd){
 	cmd->Nsim=10;
 	cmd->Allow=1.01;
 	cmd->Nbeam=20;
-	cmd->ssize=2.0;
-	cmd->ang=15.0;
+	cmd->ssize=7.0;
+	cmd->ang=30.0;
 	cmd->TopN=10;
 	cmd->ShowGrid=false;
 
@@ -136,13 +136,13 @@ void errmsg(){
 	puts("v0.33	Fix problems in translation vector");
 
 	puts("---Options---");
-	printf("-c [int  ] :Number of cores for threads def=%d\n",2);
-	printf("-t [float] :Threshold of density map1 def=%.3f\n",0.00);
-	printf("-T [float] :Threshold of density map2 def=%.3f\n",0.00);
-	printf("-g [float] : bandwidth of the gaussian filter\n");
+	printf("-t [float] : Threshold of density map1 def=%.3f\n",0.00);
+	printf("-T [float] : Threshold of density map2 def=%.3f\n",0.00);
+	printf("-g [float] : Bandwidth of the gaussian filter\n");
         printf("             def=16.0, sigma = 0.5*[float]\n");
-	printf("-s [float] : sampling grid space def=2.0\n");
-	printf("-A [float] : sampling Angle interval def=15.0\n");
+	printf("-s [float] : Sampling grid space def=7.0\n");
+	printf("-A [float] : Sampling Angle interval def=30.0\n");
+	printf("-c [int  ] : Number of cores for threads def=%d\n",2);
 	printf("-N [int  ] : Refine Top [int] models def=10\n");
 	printf("-S 	   : Show topN models in PDB format def=false\n");
 	printf("-V 	   : Vector Products Mode def=true\n");
@@ -151,5 +151,5 @@ void errmsg(){
         printf("             Using normalized density Value by Gaussian Filter\n");
 	printf("-P         : Pearson Correlation Coefficient Mode def=false\n");
         printf("             Using normalized density Value by Gaussian Filter and average density\n");
-	printf("Thi is Ver %.3f\n",VER);
+	printf("This is Ver %.3f\n",VER);
 }
