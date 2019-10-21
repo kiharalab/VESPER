@@ -20,8 +20,11 @@ Pymol (for visualization): https://pymol.org/2/
 
 ## VESPER protocol
 VESPER protocol consists of three steps:
+
 (1) To identify the best superimposition of two EM maps, each map is firstly converted to a set of unit vectors using the mean shift algorithm.
+
 (2) After conversion of maps into unit vectors, the best superimposition of two maps is identified using the fast Fourier transform (FFT). For each rotation sampled, a translation scan is performed using FFTs to optimize the summation of dot products of matched vectors (DOT score). 
+
 (3) For each of the top 10 models from FFT search, VESPER would perform 5° local refinement along each axis and then write top 10 models after the refinement into the output file. 
 
 Given a query map, all other maps in the database are ranked by their similarity to the query, which is measured by the normalized z-score of the best superimposition. To calculate the normalized z-score, we firstly cluster the best DOT score for each of the sampled rotations using single-linkage clustering at cutoff = 20% * (Maximum DOT score – Minimum DOT score). Normalized z-score for the best superimposition is then calculated using mean and standard deviation of the largest cluster. 
@@ -93,6 +96,7 @@ Sample Inputs:
 
 Two sample map files can be found in example_data/ folder.
 
+
 **Options:**
 -a: Name of the first map MAP1. 
 
@@ -122,6 +126,7 @@ Two sample map files can be found in example_data/ folder.
 
 -L: Overlap mode. Default = false.
 
+
 **Output format:**
 By default, VESPER writes the vector information for each of top 10 models after local refinement into VESPER output. Vector information for the first model starts with two lines like the ones shown below.
 
@@ -139,6 +144,7 @@ ATOM      1  CA  ALA     1     101.600 164.600 248.600  1.00  0.00
 ATOM      2  CB  ALA     1     106.065 166.626 243.604  1.00  0.00
 ```
 
+
 **Usage:**
 ```
 ./VESPER ./example_data/emd_8724.map ./example_data/emd_8409.map -t 0.04 -T 0.048 -s 7 -A 30 -c 5 -S > 8724_8409_s7a30.pdb
@@ -153,6 +159,7 @@ python cluster_score.py -i [VESPER_output_file] -c [Clustering cutoff] -o [Outpu
 
 This program takes the VESPER output file as the input.
 
+
 **Options:**
 
 -i: Name of input file.
@@ -161,8 +168,10 @@ This program takes the VESPER output file as the input.
 
 -o: Output filename. By default, output file would be named as input filename followed by .normzscore.
 
+
 **Output format:**
 It shows the normalized z-score for each of top 10 models. One line for each model.
+
 
 **Usage:**
 ```
