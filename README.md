@@ -23,25 +23,25 @@ VESPER protocol consists of three steps:
 
 (1) To identify the best superimposition of two EM maps, each map is firstly converted to a set of unit vectors using the mean shift algorithm.
 
-(2) After conversion of maps into unit vectors, the best superimposition of two maps is identified using the fast Fourier transform (FFT). For each rotation sampled, a translation scan is performed using FFTs to optimize the summation of dot products of matched vectors (DOT score). 
+(2) The best superimposition of two maps is identified using the fast Fourier transform (FFT). For each rotation sampled, a translation scan is performed using FFTs to optimize the summation of dot products of matched vectors (DOT score). 
 
-(3) For each of the top 10 models from FFT search, VESPER would perform 5° local refinement along each axis and then write top 10 models after the refinement into the output file. 
+(3) For each of the top 10 models from FFT search, VESPER performs 5° local refinement along each axis and then write top 10 models after the refinement into the output file. 
 
 Given a query map, all other maps in the database are ranked by their similarity to the query, which is measured by the normalized z-score of the best superimposition. To calculate the normalized z-score, we firstly cluster the best DOT score for each of the sampled rotations using single-linkage clustering at cutoff = 20% * (Maximum DOT score – Minimum DOT score). Normalized z-score for the best superimposition is then calculated using mean and standard deviation of the largest cluster. 
 
 ## Usage
-(1) Identify the best superimpostion between two EM maps by VESPER
+(1) Identify the best superimpostion between two EM maps by VESPER.
 ```
 Usage: EMVEC_FIT -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
 
 ---Options---
--c [int  ] :Number of cores for threads def=2
--t [float] :Threshold of density map1 def=0.000
--T [float] :Threshold of density map2 def=0.000
--g [float] : bandwidth of the gaussian filter
+-t [float] : Threshold of density map1 def=0.000
+-T [float] : Threshold of density map2 def=0.000
+-g [float] : Bandwidth of the gaussian filter
              def=16.0, sigma = 0.5*[float]
--s [float] : sampling grid space def=2.0
--A [float] : sampling Angle interval def=15.0
+-s [float] : Sampling grid space def=7.0
+-A [float] : Sampling Angle interval def=30.0
+-c [int  ] : Number of cores for threads def=2
 -N [int  ] : Refine Top [int] models def=10
 -S         : Show topN models in PDB format def=false
 -V         : Vector Products Mode def=true
@@ -52,7 +52,7 @@ Usage: EMVEC_FIT -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
              Using normalized density Value by Gaussian Filter and average density
  ```
  
-(2) Calculate the normalized z-score for each of top 10 models in VESPER output
+(2) Calculate the normalized z-score for each of top 10 models in VESPER output.
 ```
 python cluster_score.py:
 usage: cluster_score.py [-h] -i INPUT_FILE [-c CUTOFF] [-o OUT_NAME]
@@ -92,12 +92,13 @@ VESPER -a [MAP1.mrc] -b [MAP2.mrc] [options] > [VESPER_output_filename]
 
 VESPER expects MAP1.mrc and MAP2.mrc to be valid filenames. Supported file formats are MRC and CCP4.
 
-Sample Inputs:
+**Sample Inputs:**
 
 Two sample map files can be found in example_data/ folder.
 
 
 **Options:**
+
 -a: Name of the first map MAP1. 
 
 -b: Name of the second map MAP2.
