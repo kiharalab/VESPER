@@ -148,7 +148,7 @@ ATOM      2  CB  ALA     1     106.065 166.626 243.604  1.00  0.00
 
 **Usage:**
 ```
-./VESPER ./example_data/emd_8724.map ./example_data/emd_8409.map -t 0.04 -T 0.048 -s 7 -A 30 -c 5 -S > 8724_8409_s7a30.pdb
+./VESPER -a ./example_data/emd_8724.map -b ./example_data/emd_8409.map -t 0.04 -T 0.048 -s 7 -A 30 -c 5 -S > ./example_data/8724_8409_s7a30.pdb
 ```
 
 ## 3. Calculate normalized z-score for top 10 models in VESPER output.
@@ -176,6 +176,6 @@ It shows the normalized z-score for each of top 10 models. One line for each mod
 
 **Usage:**
 ```
-python cluster_score.py -i 8724_8409_s7a30.pdb
+python cluster_score.py -i ./example_data/8724_8409_s7a30.pdb
 ```
 
