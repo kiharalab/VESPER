@@ -80,7 +80,7 @@ git clone https://github.com/kiharalab/VESPER
 Next, change into VESPER_code directory and compile from the source codes.
 ```
 cd /your_path_to_VESPER/VESPER_code/
-Make
+make
 cp VESPER ../
 ```
 ## 2. Identify the best fitting of two EM maps.
