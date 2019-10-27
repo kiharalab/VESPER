@@ -1,4 +1,4 @@
-# ![VESPER](VESPER_logo_small.png)
+# VESPER
 VESPER is a computational tool using local vector based algorithm that can accurately identify the global and local alignment of cryo-electron microscopy (EM) maps.
 
 Copyright (C) 2019 Xusi Han, Genki Terashi, Daisuke Kihara, and Purdue University.
