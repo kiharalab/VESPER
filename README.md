@@ -179,15 +179,15 @@ It shows the normalized z-score for each of top 10 models. One line for each mod
 python cluster_score.py -i ./example_data/8724_8409_s7a30.pdb
 ```
 
-## 4. Visualize the superimpositions in Pymol
+## 4. Visualize the superimpositions in Pymol.
 To visualize the superimpositions in VESPER output, users can load the VESPER output file into Pymol and color the vectors by their fitness score. Here we take the two maps and VESPER output provided in example_data/ as an example.
 
-Firstly, run the code below from command line to open the VESPER output in Pymol.
+Firstly, run the code below from command line to open the VESPER output in Pymol. 
 ```
 pymol ./example_data/8724_8409_s7a30.pdb
 ```
 
-Secondly, run the following commands from Pymol command line to load the map file for MAP1, show vectors as spheres, and color the vectors by their corresponding fitness score.
+Secondly, run the following commands from Pymol command line to load the map file for MAP1, show vectors as spheres, and color the vectors by their corresponding fitness score. Users can change the name of the map and output file below according to the map and output file they have.
 ```
 bg_color white
 set normalize_ccp4_maps, 0
