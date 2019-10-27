@@ -23,7 +23,7 @@ VESPER protocol consists of three steps:
 
 (1) To identify the best superimposition of two EM maps, each map is firstly converted to a set of unit vectors using the mean shift algorithm.
 
-(2) The best superimposition of two maps is identified using the fast Fourier transform (FFT). For each rotation sampled, a translation scan is performed using FFTs to optimize the summation of dot products of matched vectors (DOT score). 
+(2) The best superimposition of two maps is identified using the fast Fourier transform (FFT). For each rotation sampled, a translation scan is performed using FFT to optimize the summation of dot products of matched vectors (DOT score). 
 
 (3) For each of the top 10 models from FFT search, VESPER performs 5° local refinement along each axis and then write top 10 models after the refinement into the output file. 
 
@@ -132,13 +132,13 @@ Two sample map files can be found in example_data/ folder.
 By default, VESPER writes the vector information for each of top 10 models after local refinement into VESPER output. Vector information for the first model starts with two lines like the ones shown below.
 
 ```
-#0 R={0.0 0.0 5.0} MTX={0.996194700 -0.087155725 0.000000000 0.087155725 0.996194700 0.000000000 -0.000000000 0.000000000 1.000000000} T={37.335 24.247 93.200} sco= 144.563 zsco= 10.477247
+#0 R={0.0 0.0 5.0} MTX={0.996194700 -0.087155725 0.000000000 0.087155725 0.996194700 0.000000000 -0.000000000 0.000000000 1.000000000} T={37.335 24.247 93.200} sco= 144.563 zsco= 10.477246
 Overlap= 0.0871 249/2859 CC= 0.206020 PCC= 0.068408 Score= 144.6
 ```
 
-In the first line, 0 is the index of the first model. Here the model index starts from 0. MTX shows the rotation matrix of MAP2 relative to MAP1. T shows the translation vector of MAP2 relative to MAP1. sco shows the DOT score, which is the summation of dot products of matched vectors. zsco shows the non-normalized z-score. In the second line, Overlap shows the percentage of overlapped pixels between two maps. CC shows the correlation coefficient where density values are not normalized around the mean. PCC shows the Pearson correlation coefficient. Score is the same as sco, which shows the DOT score.
+In the first line, 0 is the index of the first model. Here the model index starts from 0. MTX shows the rotation matrix of MAP2 relative to MAP1. T shows the translation vector of MAP2 relative to MAP1. sco shows the DOT score, which is the summation of dot products of matched vectors between two maps. zsco shows the non-normalized z-score. In the second line, Overlap shows the percentage of overlapped pixels between two maps. CC shows the correlation coefficient where density values are not normalized around the mean. PCC shows the Pearson correlation coefficient. Score is the same as sco, which shows the DOT score.
 
-After these two lines, the output file shows the vector information for the first model. Each vector is represented by two atoms, one for start position (CA) and one for end  (CB). The number in the last column shows the fitness score, which is dot product between this vector and the matched vector in MAP1. Fitness score ranges from -1 to 1: 1 for a perfect match, 0 if two vectors are perpendicular or there is no matched vector, and -1 if two vectors are in the opposite direction. One example is shown below. In this case, there is no matched vector in MAP1 for this specific vector. Thus, fitness score in the last column is 0.00.
+After these two lines, the output file shows the vector information for the first model. Each vector is represented by two atoms, one for start position (CA) and one for end position (CB). The number in the last column shows the fitness score, which is dot product between this vector and the matched vector in MAP1. Fitness score ranges from -1 to 1: 1 for a perfect match, 0 if two vectors are perpendicular or there is no matched vector, and -1 if two vectors are in the opposite direction. One example is shown below. In this case, there is no matched vector in MAP1 for this specific vector. Thus, fitness score in the last column is 0.00. Similar information is provided for other 9 models in VESPER output.
 
 ```
 ATOM      1  CA  ALA     1     101.600 164.600 248.600  1.00  0.00
@@ -179,3 +179,22 @@ It shows the normalized z-score for each of top 10 models. One line for each mod
 python cluster_score.py -i ./example_data/8724_8409_s7a30.pdb
 ```
 
+## 4. Visualize the superimpositions in Pymol
+To visualize the superimpositions in VESPER output, users can load the VESPER output file into Pymol and color the vectors by their fitness score. Here we take the two maps and VESPER output provided in example_data/ as an example.
+
+Firstly, run the code below from command line to open the VESPER output in Pymol.
+```
+pymol ./example_data/8724_8409_s7a30.pdb
+```
+
+Secondly, run the following commands from Pymol command line to load the map file for MAP1, show vectors as spheres, and color the vectors by their corresponding fitness score.
+```
+bg_color white
+set normalize_ccp4_maps, 0
+load emd_8724.map
+isosurface emd_8724_isosurface, emd_8724, 0.04
+set transparency, 0.4
+hide cartoon, 8724_8409_s7a30
+show spheres, 8724_8409_s7a30
+spectrum b, rainbow, 8724_8409
+```
