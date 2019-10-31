@@ -47,9 +47,9 @@ Usage: VESPER -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
 -V         : Vector Products Mode def=true
 -L         : Overlap Mode def=false
 -C         : Cross Correlation Coefficient Mode def=false
-             Using normalized density Value by Gaussian Filter
+             Using normalized density value by Gaussian Filter
 -P         : Pearson Correlation Coefficient Mode def=false
-             Using normalized density Value by Gaussian Filter and average density
+             Using normalized density value by Gaussian Filter and average density
  ```
  
 (2) Calculate the normalized z-score for each of top 10 models in VESPER output.
