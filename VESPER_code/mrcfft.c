@@ -189,12 +189,12 @@ void Complex_Complex(fftwf_complex *a, fftwf_complex *b, fftwf_complex *rt,int n
 
 float FindBestTrans(float *x,float *y,float *z,int n,int trans[3]){
 
- double best=0;
+ float best=0.000;
  double s;
- int ind,bpos[3];
+ int ind;//,bpos[3];
  int n2=n*n;
 
- bpos[0]=bpos[1]=bpos[2]=0;
+ trans[0]=trans[1]=trans[2]=0;
  for(int i=0;i<n;i++){
  for(int j=0;j<n;j++){
  for(int k=0;k<n;k++){
@@ -214,10 +214,10 @@ float FindBestTrans1D(float *x,int n,int trans[3]){
 
  double best=0;
  double s;
- int ind,bpos[3];
+ int ind;//,bpos[3];
  int n2=n*n;
 
- bpos[0]=bpos[1]=bpos[2]=0;
+ //bpos[0]=bpos[1]=bpos[2]=0;
  for(int i=0;i<n;i++){
  for(int j=0;j<n;j++){
  for(int k=0;k<n;k++){
@@ -495,6 +495,7 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
   for(int i=0;i<xyzdim;i++) x2[i]=mtmp->vec[i][0];
   for(int i=0;i<xyzdim;i++) y2[i]=mtmp->vec[i][1];
   for(int i=0;i<xyzdim;i++) z2[i]=mtmp->vec[i][2];
+
 
   	 fftwf_execute_dft_r2c(px1,x2,X2);
   	 Complex_Complex(X1,X2,X12,xyzdim);

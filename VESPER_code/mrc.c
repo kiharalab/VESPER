@@ -743,6 +743,7 @@ bool fastVEC(MRC *m,MRC *M){
    tmpcd[2]=pos2[2]-pos[2];
 
    double dvec=sqrt(tmpcd[0]*tmpcd[0]+tmpcd[1]*tmpcd[1]+tmpcd[2]*tmpcd[2]);
+   if(dvec==0.00) dvec=1.00;//For low resolution maps!!
    double rdvec=1.000/dvec;
    M->vec[ind][0]=tmpcd[0]*rdvec;
    M->vec[ind][1]=tmpcd[1]*rdvec;

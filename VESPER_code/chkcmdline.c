@@ -127,7 +127,7 @@ int chkcmdline( int argc, char **argv,CMD *cmd){
 }
 
 void errmsg(){
-	puts("Usage: VESPER -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]");
+	puts("Usage: EMVEC_FIT -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]");
 	puts("v0.10	Start");
 	puts("v0.20	Pure Multi threading Process & refine 5 degree.");
 	puts("v0.30	Add Overlap Mode & using single-precision");
@@ -148,8 +148,8 @@ void errmsg(){
 	printf("-V 	   : Vector Products Mode def=true\n");
 	printf("-L 	   : Overlap Mode def=false\n");
 	printf("-C 	   : Cross Correlation Coefficient Mode def=false\n");
-        printf("             Using normalized density Value by Gaussian Filter\n");
+        printf("             Using normalized density value by Gaussian Filter\n");
 	printf("-P         : Pearson Correlation Coefficient Mode def=false\n");
-        printf("             Using normalized density Value by Gaussian Filter and average density\n");
-	printf("This is Ver %.3f\n",VER);
+        printf("             Using normalized density value by Gaussian Filter and average density\n");
+	printf("Thi is Ver %.3f\n",VER);
 }
