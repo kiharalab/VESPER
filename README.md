@@ -32,7 +32,7 @@ Given a query map, all other maps in the database are ranked by their similarity
 ## Usage
 (1) Identify the best superimpostion between two EM maps by VESPER.
 ```
-Usage: EMVEC_FIT -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
+Usage: VESPER -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
 
 ---Options---
 -t [float] : Threshold of density map1 def=0.000
