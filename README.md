@@ -32,7 +32,7 @@ VESPER protocol consists of three steps:
 Given a query map, all other maps in the database are ranked by their similarity to the query, which is measured by the normalized z-score of the best superimposition. To calculate the normalized z-score, we firstly cluster the best DOT score for each of the sampled rotations using single-linkage clustering at cutoff = 20% * (Maximum DOT score – Minimum DOT score). Normalized z-score for the best superimposition is then calculated using mean and standard deviation of the largest cluster. 
 
 ## Usage
-(1) Identify the best superimpostion between two EM maps by VESPER.
+(1) Identify the best superimposition between two EM maps by VESPER.
 ```
 Usage: VESPER -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
 
