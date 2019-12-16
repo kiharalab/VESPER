@@ -120,7 +120,7 @@ int chkcmdline( int argc, char **argv,CMD *cmd){
         }
 	//option check
 	printf("#Pairwise matching result from VESPER\n");
-	printf("#If this VESPER calculation result is used for publication, please cite:\n"
+	printf("#If this VESPER calculation result is used for publication, please cite:\n");
 	printf("#Xusi Han, Genki Terashi, Siyang Chen, & Daisuke Kihara. VESPER: Global and Local Cryo-EM Map Alignment Using Local Density Vectors. Manuscript in preparation. (2019).\n");
 	printf("#Number of threads= %d\n",cmd->Nthr);
 	printf("#Map1 Threshold= %f\n",cmd->th1);
