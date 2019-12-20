@@ -542,28 +542,12 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
 
  printf("#refine top %d\n",TopN);
 
- cnt=0;
 /*
- for(int i=0;i<TopN;i++){
-  double r[3];
-  r[0]=tbl[i].r[0];
-  r[1]=tbl[i].r[1];
-  r[2]=tbl[i].r[2];
- 	for(double rx=r[0]-5.0;rx<=r[0]+5.0 && rx<360; rx+=5.0){
-	 if(rx<0) continue;
- 	for(double ry=r[1]-5.0;ry<=r[1]+5.0 && ry<360; ry+=5.0){
-	 if(ry<0) continue;
- 	for(double rz=r[2]-5.0;rz<=r[2]+5.0 && rz<180; rz+=5.0){
- 	 TopTbl[cnt].r[0]=rx;
- 	 TopTbl[cnt].r[1]=ry;
- 	 TopTbl[cnt].r[2]=rz;
- 	 TopTbl[cnt].sco=0.00;
- 	 cnt++;
- 	}}}
- }
- Njobs=cnt;
 */
+
+
  cnt=0;
+ if(ang>5.0){
  for(int i=0;i<TopN;i++){
   double r[3];
   r[0]=tbl[i].r[0];
@@ -587,7 +571,6 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
  	}}}
  }
  qsort(TopTbl,cnt,sizeof(TBL),cmp_tbl_code);
-
  Njobs=0;
  for(int i=0;i<cnt;i++){
   if(i==0){
@@ -599,7 +582,19 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
    Njobs++;
   }
  }
+ }else{
+ 	for(int i=0;i<TopN;i++){
+		TopTbl[i].r[0]=tbl[i].r[0];
+		TopTbl[i].r[1]=tbl[i].r[1];
+		TopTbl[i].r[2]=tbl[i].r[2];
 
+		TopTbl[i].t[0]=tbl[i].t[0];
+		TopTbl[i].t[1]=tbl[i].t[1];
+		TopTbl[i].t[2]=tbl[i].t[2];
+		TopTbl[i].sco=tbl[i].sco;
+	}
+	Njobs=0;//Do not perform refinement
+ }
  printf("#REFINE NumOfJobs= %d\n",Njobs);
 
  #pragma omp parallel for schedule(dynamic,5)
@@ -667,6 +662,8 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
 
  }
 
+ if(ang<=5.0)
+	 Njobs=TopN;
 
  //Show topN
  qsort(TopTbl,Njobs,sizeof(TBL),cmp_tbl);
@@ -1102,7 +1099,7 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
   return true;
 
  printf("#refine top %d\n",TopN);
-
+ if(ang>5.0){
  cnt=0;
  for(int i=0;i<TopN;i++){
   double r[3];
@@ -1139,6 +1136,20 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
    Njobs++;
   }
  }
+ }else{
+        for(int i=0;i<TopN;i++){
+                TopTbl[i].r[0]=tbl[i].r[0];
+                TopTbl[i].r[1]=tbl[i].r[1];
+                TopTbl[i].r[2]=tbl[i].r[2];
+
+                TopTbl[i].t[0]=tbl[i].t[0];
+                TopTbl[i].t[1]=tbl[i].t[1];
+                TopTbl[i].t[2]=tbl[i].t[2];
+                TopTbl[i].sco=tbl[i].sco;
+        }
+        Njobs=0;//Do not perform refinement
+ }
+
  printf("#REFINE NumOfJobs= %d\n",Njobs);
 
  #pragma omp parallel for schedule(dynamic,5)
@@ -1232,6 +1243,8 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
 
  }
 
+ if(ang<=5.0)
+	 Njobs=TopN;
 
  //Show topN
  qsort(TopTbl,Njobs,sizeof(TBL),cmp_tbl);
