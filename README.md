@@ -198,5 +198,5 @@ isosurface emd_8724_isosurface, emd_8724, 0.04
 set transparency, 0.4
 hide cartoon, 8724_8409_s7a30
 show spheres, 8724_8409_s7a30
-spectrum b, rainbow, 8724_8409
+spectrum b, blue_red, 8724_8409
 ```
