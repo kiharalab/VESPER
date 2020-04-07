@@ -54,7 +54,7 @@ Usage: VESPER -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
              Using normalized density value by Gaussian Filter and average density
  ```
  
-(2) Calculate the normalized z-score for each of top 10 models in VESPER output.
+(2) Calculate the normalized score Z-score for each of top 10 models in VESPER output.
 ```
 python cluster_score.py:
 usage: cluster_score.py [-h] -i INPUT_FILE [-c CUTOFF] [-o OUT_NAME]
