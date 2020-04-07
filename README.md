@@ -29,7 +29,7 @@ VESPER protocol consists of three steps:
 
 (3) For each of the top 10 models from FFT search, VESPER performs 5° local refinement along each axis and then write top 10 models after the refinement into the output file. 
 
-Given a query map, all other maps in the database are ranked by their similarity to the query, which is measured by the normalized z-score of the best superimposition. To calculate the normalized z-score, we firstly cluster the best DOT score for each of the sampled rotations using single-linkage clustering at cutoff = 20% * (Maximum DOT score – Minimum DOT score). Normalized z-score for the best superimposition is then calculated using mean and standard deviation of the largest cluster. 
+Given a query map, all other maps in the database are ranked by their similarity to the query, which is measured by the normalized score Z-score of the best superimposition. To calculate the Z-score, we firstly cluster the best DOT score for each of the sampled rotations using single-linkage clustering at cutoff = 20% * (Maximum DOT score – Minimum DOT score). Z-score for the best superimposition is then calculated using mean and standard deviation of the largest cluster. 
 
 ## Usage
 (1) Identify the best superimposition between two EM maps by VESPER.
@@ -138,7 +138,7 @@ By default, VESPER writes the vector information for each of top 10 models after
 Overlap= 0.0871 249/2859 CC= 0.206020 PCC= 0.068408 Score= 144.6
 ```
 
-In the first line, 0 is the index of the first model. Here the model index starts from 0. MTX shows the rotation matrix of MAP2 relative to MAP1. T shows the translation vector of MAP2 relative to MAP1. sco shows the DOT score, which is the summation of dot products of matched vectors between two maps. zsco shows the non-normalized z-score. In the second line, Overlap shows the percentage of overlapped pixels between two maps. CC shows the correlation coefficient where density values are not normalized around the mean. PCC shows the Pearson correlation coefficient. Score is the same as sco, which shows the DOT score.
+In the first line, 0 is the index of the first model. Here the model index starts from 0. MTX shows the rotation matrix of MAP2 relative to MAP1. T shows the translation vector of MAP2 relative to MAP1. sco shows the DOT score, which is the summation of dot products of matched vectors between two maps. 
 
 After these two lines, the output file shows the vector information for the first model. Each vector is represented by two atoms, one for start position (CA) and one for end position (CB). The number in the last column shows the fitness score, which is dot product between this vector and the matched vector in MAP1. Fitness score ranges from -1 to 1: 1 for a perfect match, 0 if two vectors are perpendicular or there is no matched vector, and -1 if two vectors are in the opposite direction. One example is shown below. In this case, there is no matched vector in MAP1 for this specific vector. Thus, fitness score in the last column is 0.00. Similar information is provided for other 9 models in VESPER output.
 
@@ -153,7 +153,7 @@ ATOM      2  CB  ALA     1     106.065 166.626 243.604  1.00  0.00
 ./VESPER -a ./example_data/emd_8724.map -b ./example_data/emd_8409.map -t 0.04 -T 0.048 -s 7 -A 30 -c 5 -S > ./example_data/8724_8409_s7a30.pdb
 ```
 
-## 3. Calculate normalized z-score for top 10 models in VESPER output.
+## 3. Calculate Z-score for top 10 models in VESPER output.
 ```
 python cluster_score.py -i [VESPER_output_file] -c [Clustering cutoff] -o [Output_file]
 ```
@@ -173,7 +173,7 @@ This program takes the VESPER output file as the input.
 
 
 **Output format:**
-It shows the normalized z-score for each of top 10 models. One line for each model.
+It shows the Z-score for each of top 10 models. One line for each model.
 
 
 **Usage:**
