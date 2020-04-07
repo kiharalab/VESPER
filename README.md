@@ -7,7 +7,7 @@ License: GPL v3 for academic use. (For commercial use, please contact us for dif
 
 Contact: Daisuke Kihara (dkihara@purdue.edu)
 
-Reference: Xusi Han, Genki Terashi, Siyang Chen, & Daisuke Kihara. VESPER: Global and Local Cryo-EM Map Alignment Using Local Density Vectors. *Nature Structural & Molecular Biology (Submitted)*. (2020)
+Reference: Xusi Han, Genki Terashi, Siyang Chen, & Daisuke Kihara. VESPER: Global and Local Cryo-EM Map Alignment Using Local Density Vectors. *Manuscript in preparation*. (2020)
 
 Online platform: http://kiharalab.org/em-surfer/vesper.php
 
