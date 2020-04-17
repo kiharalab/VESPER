@@ -205,7 +205,8 @@ spectrum b, blue_red, 8724_8409
 
 
 
-```usage: transform_em_map.py [-h] -i1 REF_MAP -i2 TARGET_MAP -t VESPER_RESULT
+```
+usage: transform_em_map.py [-h] -i1 REF_MAP -i2 TARGET_MAP -t VESPER_RESULT
                            [-odir OUT_DIR]
 
 Transform the target map given rotation and translation information in the
