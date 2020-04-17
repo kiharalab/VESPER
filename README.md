@@ -202,24 +202,3 @@ hide cartoon, 8724_8409_s7a30
 show spheres, 8724_8409_s7a30
 spectrum b, blue_red, 8724_8409
 ```
-
-
-
-```
-usage: transform_em_map.py [-h] -i1 REF_MAP -i2 TARGET_MAP -t VESPER_RESULT
-                           [-odir OUT_DIR]
-
-Transform the target map given rotation and translation information in the
-VESPER output file.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i1 REF_MAP, --input1 REF_MAP
-                        Required. Name of the reference map file.
-  -i2 TARGET_MAP, --input2 TARGET_MAP
-                        Required. Name of the target map file.
-  -t VESPER_RESULT      Required. Name of the result file from VESPER.
-  -odir OUT_DIR         Optional. Directory for the transformed target map
-                        files. If not specified, the transformed target map
-                        files would be written to the current director
-```
