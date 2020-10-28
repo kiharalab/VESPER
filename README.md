@@ -55,6 +55,8 @@ Usage: VESPER -a [MAP1.mrc (large)] -b [MAP2.mrc (small)] [(option)]
              Using normalized density value by Gaussian Filter
 -P         : Pearson Correlation Coefficient Mode def=false
              Using normalized density value by Gaussian Filter and average density
+-F         : Laplacian Filtering Mode def=false
+-E         : Evaluation mode of the current position def=false
  ```
  
 (2) Calculate the normalized score Z-score for each of top 10 models in VESPER output.
@@ -203,3 +205,10 @@ hide cartoon, 8724_8409_s7a30
 show spheres, 8724_8409_s7a30
 spectrum b, blue_red, 8724_8409
 ```
+
+## (Optional 5. Fitting by Other Scores)
+Option:
+	-L	Overlap of volume.
+	-C	Linear cross-correlation (CC). Compute scalar product of the density value.
+	-P	Pearson crrelation coefficient. Density values are normalized by average of the densty for each map. Then CC is computed.
+	-F	Laplacian filter score. Laplacian filter is applied to the maps. Then CC is computed.
