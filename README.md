@@ -187,7 +187,7 @@ python cluster_score.py -i ./example_data/8724_8409_s7a30.pdb
 ## 4. Visualize the superimpositions in Pymol.
 To visualize the superimpositions in VESPER output, users can load the VESPER output file into Pymol and color the vectors by their fitness score. Here we take the two maps and VESPER output provided in example_data/ as an example.
 
-Firstly, run the code below from command line to open the VESPER output in Pymol. 
+Firstly, run the code below from command line to open the VESPER output in  Pymol. 
 ```
 pymol ./example_data/8724_8409_s7a30.pdb
 ```
