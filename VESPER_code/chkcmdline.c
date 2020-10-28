@@ -39,6 +39,7 @@ int chkcmdline( int argc, char **argv,CMD *cmd){
 	cmd->th2=0.00;
 
 	cmd->Mode=1;
+	cmd->Emode=false;
 
         while (--argc){
          p++;
@@ -80,21 +81,12 @@ int chkcmdline( int argc, char **argv,CMD *cmd){
 		 case 'r':
                         cmd->Nround=atoi(*(++p));
                         --argc; break;
-		 //case 'b':
-                 //       cmd->Nnb=atoi(*(++p));
-                 //       --argc; break;
 		 case 'l':
                         cmd->Ntabu=atoi(*(++p));
                         --argc; break;
 		 case 's':
                         cmd->ssize=atof(*(++p));
                         --argc; break;
-		 //case 'a':
-                 //       cmd->Allow=atoi(*(++p));
-                 //       --argc; break;
-		 //case 'T':
-                 //       cmd->Mode=0;
-                 //       break;
 		 case 'S':
                         cmd->ShowGrid=true;
                         break;
@@ -109,6 +101,12 @@ int chkcmdline( int argc, char **argv,CMD *cmd){
                         break;
 		 case 'P':
                         cmd->Mode=4;
+                        break;
+		 case 'F':
+                        cmd->Mode=5;
+                        break;
+                 case 'E':
+                        cmd->Emode=true;
                         break;
 		 default: 
 		  	fprintf(stderr,"No such a option: %s\n",*p+1); 
@@ -154,5 +152,7 @@ void errmsg(){
         printf("             Using normalized density value by Gaussian Filter\n");
 	printf("-P         : Pearson Correlation Coefficient Mode def=false\n");
         printf("             Using normalized density value by Gaussian Filter and average density\n");
+	printf("-F         : Laplacian Filtering Mode def=false\n");
+        printf("-E         : Evaluation mode of the current position def=false\n");
 	printf("This is Ver %.3f\n",VER);
 }

@@ -120,12 +120,12 @@ int main(int argc, char **argv)
  //6D search
  //Vector based
  if(cmd.Mode==1)
-  if(SearchMAPfftMT(&mrcN1,&mrcN2,cmd.ang))
+  if(SearchMAPfftMT(&mrcN1,&mrcN2,cmd.ang,cmd.Emode))
    return(0);
 
  //Overlap based
- if(cmd.Mode==2||cmd.Mode==3||cmd.Mode==4)
-  if(SearchMAPfftMT_OVCC(&mrcN1,&mrcN2,cmd.ang,cmd.Mode-2))
+ if(cmd.Mode==2||cmd.Mode==3||cmd.Mode==4||cmd.Mode==5)
+  if(SearchMAPfftMT_OVCC(&mrcN1,&mrcN2,cmd.ang,cmd.Mode-2,cmd.Emode))
    return(0);
 
  t4=gettimeofday_sec();

@@ -1,4 +1,4 @@
-#define VER 0.33
+#define VER 0.40
 #define PI 3.141592
 #define ATOM 50000
 #define RES 5000
@@ -114,6 +114,7 @@ typedef struct{
 	double ssize,ang;
 	int TopN;
 	bool ShowGrid;
+	bool Emode;
 } CMD;
 
 /*

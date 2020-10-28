@@ -254,7 +254,7 @@ int cmp_tbl_code(const void *c1, const void *c2){
 }
 
 
-bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
+bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang,bool Emode){
 
  MRC mtmp,*MT_mtmp;
  int n=m2->xdim;
@@ -262,6 +262,9 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
  int xyzdim=m2->xdim*m2->ydim*m2->zdim;
  int Nth=omp_get_max_threads();
  int TopN=cmd.TopN;
+
+ if(Emode)//Evaluation mode
+	 TopN=0;
 
  fftwf_complex *X1,*Y1,*Z1;
  fftwf_complex *X2,*Y2,*Z2;
@@ -436,7 +439,13 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
  puts("#Start Rot");
 
  //Make job table
- int Njobs=(360/ang)*(360/ang)*(360/ang);
+ int Njobs=0;
+ for(double rx=0;rx<360; rx+=ang){
+ for(double ry=0;ry<360; ry+=ang){
+ for(double rz=0;rz<=180;rz+=ang){
+  Njobs++;
+ }}}
+
  double *jobtbl;
  printf("# NumOfJobs= %d\n",Njobs);
  if((tbl=(TBL *)malloc(sizeof(TBL)*Njobs))==NULL)
@@ -541,10 +550,6 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
   return true;
 
  printf("#refine top %d\n",TopN);
-
-/*
-*/
-
 
  cnt=0;
  if(ang>5.0){
@@ -668,37 +673,33 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
  //Show topN
  qsort(TopTbl,Njobs,sizeof(TBL),cmp_tbl);
  for(int i=0;i<TopN;i++){
-	 /*
-  printf("#%d R={%.1f %.1f %.1f} T={%d %d %d} sco= %.1f zsco= %f\n",i,
-  TopTbl[i].r[0],TopTbl[i].r[1],TopTbl[i].r[2],TopTbl[i].t[0],TopTbl[i].t[1],TopTbl[i].t[2],TopTbl[i].sco,(TopTbl[i].sco-Ave)/Std);
-  */
-/*
-	 double t[3];
-	 int f[3];
-	 f[0]=TopTbl[i].t[0];
-  	 f[1]=TopTbl[i].t[1];
-  	 f[2]=TopTbl[i].t[2];
-
-	 if(TopTbl[i].t[0]>0.5*m2->zdim) f[0]=TopTbl[i].t[0]-m2->xdim;
-	 if(TopTbl[i].t[1]>0.5*m2->zdim) f[1]=TopTbl[i].t[1]-m2->xdim;
-	 if(TopTbl[i].t[2]>0.5*m2->zdim) f[2]=TopTbl[i].t[2]-m2->xdim;
-
-	 t[0]=m1->orgxyz[0]-m2->orgxyz[0] + f[0]*m2->widthx;
-	 t[1]=m1->orgxyz[1]-m2->orgxyz[1] + f[1]*m2->widthx;
-	 t[2]=m1->orgxyz[2]-m2->orgxyz[2] + f[2]*m2->widthx;
-
-	 printf("#%d R={%.1f %.1f %.1f} T={%.3f %.3f %.3f} sco= %.1f zsco= %f\n",i,
-  	TopTbl[i].r[0],TopTbl[i].r[1],TopTbl[i].r[2],
-	t[0],t[1],t[2],
-	TopTbl[i].sco,(TopTbl[i].sco-Ave)/Std);
-*/
-	 PrintTbl(TopTbl,i,m1,m2,Ave,Std);
-
-
+  PrintTbl(TopTbl,i,m1,m2,Ave,Std);
   RotMRC(m2,&MT_mtmp[0],TopTbl[i].r[0],TopTbl[i].r[1],TopTbl[i].r[2]);
   Bestscore=GetScore(m1,&MT_mtmp[0],TopTbl[i].t);
   if(cmd.ShowGrid)
    ShowVec3(m1,&MT_mtmp[0],TopTbl[i].t);
+ }
+  //Evaluation
+ if(Emode==true){
+	 printf("##EVALUATION OF INITIAL POSITION\n");
+  int i=0;
+  double sco[5];
+  TopTbl[i].r[0]=0.00;
+  TopTbl[i].r[1]=0.00;
+  TopTbl[i].r[2]=0.00;
+
+  TopTbl[i].t[0]=0;
+  TopTbl[i].t[1]=0;
+  TopTbl[i].t[2]=0;
+
+  RotMRC(m2,&MT_mtmp[0],TopTbl[i].r[0],TopTbl[i].r[1],TopTbl[i].r[2]);
+  //Bestscore=GetScore(m1,&MT_mtmp[0],TopTbl[i].t);
+  Bestscore=GetScore2(m1,&MT_mtmp[0],TopTbl[i].t,sco);
+  TopTbl[i].sco=sco[0];
+  PrintTbl(TopTbl,i,m1,m2,Ave,Std);
+  if(cmd.ShowGrid)
+   ShowVec3(m1,&MT_mtmp[0],TopTbl[i].t);
+
  }
 
 /*
@@ -715,14 +716,17 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang){
  return false;
 }
 
-bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
+bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode, bool Emode){
 
  MRC mtmp,*MT_mtmp;
  int n=m2->xdim;
+ int xdim=m2->xdim;
  int xydim=m2->xdim*m2->ydim;
  int xyzdim=m2->xdim*m2->ydim*m2->zdim;
  int Nth=omp_get_max_threads();
  int TopN=cmd.TopN;
+ if(Emode==true)
+	 TopN=0;
 
  fftwf_complex *X1,*Y1,*Z1;
  fftwf_complex *X2,*Y2,*Z2;
@@ -750,6 +754,9 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
   puts("##CCC MODE##");
  if(mode==2)
   puts("##PCC MODE##");
+ if(mode==3)
+  puts("##LAPLACIAN FILTER MODE##");
+
  double rstd2=1.000/((m1->std*m2->std));
  double rstd3=1.000/((m1->std_norm_ave*m2->std_norm_ave));
 
@@ -908,6 +915,47 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
   else
    x2[i]=ZERO;
  }
+ if(mode==3){ //Laplacian Filter
+	 for(int x=0;x<xdim;x++){
+	 for(int y=0;y<xdim;y++){
+	 for(int z=0;z<xdim;z++){
+		 int ind=z*xydim+y*xdim+x;
+		 x1[ind]=ZERO;
+		 x2[ind]=ZERO;
+		 if(m1->dens[ind]>ZERO){
+			 //6*d
+			 x1[ind]=-6.00*m1->dens[ind];
+			 //x+1,y  ,z
+			 if(x+1<xdim) x1[ind]+=m1->dens[(z  )*xydim+(y  )*xdim+(x+1)];
+			 //x-1,y  ,z
+			 if(x-1>=0)   x1[ind]+=m1->dens[(z  )*xydim+(y  )*xdim+(x-1)];
+			 //x  ,y+1,z
+			 if(y+1<xdim) x1[ind]+=m1->dens[(z  )*xydim+(y+1)*xdim+(x  )];
+			 //x  ,y-1,z
+			 if(y-1>=0)   x1[ind]+=m1->dens[(z  )*xydim+(y-1)*xdim+(x  )];
+			 //x  ,y  ,z+1
+			 if(z+1<xdim) x1[ind]+=m1->dens[(z+1)*xydim+(y  )*xdim+(x  )];
+			 //x  ,y  ,z-1
+			 if(z-1>=0)   x1[ind]+=m1->dens[(z-1)*xydim+(y  )*xdim+(x  )];
+		 }
+		 if(m2->dens[ind]>ZERO){
+			 //6*d
+			 x2[ind]=-6.00*m2->dens[ind];
+			 //x+1,y  ,z
+			 if(x+1<xdim) x2[ind]+=m2->dens[(z  )*xydim+(y  )*xdim+(x+1)];
+			 //x-1,y  ,z
+			 if(x-1>=0)   x2[ind]+=m2->dens[(z  )*xydim+(y  )*xdim+(x-1)];
+			 //x  ,y+1,z
+			 if(y+1<xdim) x2[ind]+=m2->dens[(z  )*xydim+(y+1)*xdim+(x  )];
+			 //x  ,y-1,z
+			 if(y-1>=0)   x2[ind]+=m2->dens[(z  )*xydim+(y-1)*xdim+(x  )];
+			 //x  ,y  ,z+1
+			 if(z+1<xdim) x2[ind]+=m2->dens[(z+1)*xydim+(y  )*xdim+(x  )];
+			 //x  ,y  ,z-1
+			 if(z-1>=0)   x2[ind]+=m2->dens[(z-1)*xydim+(y  )*xdim+(x  )];
+		 }
+	 }}}
+ }
 
  
  puts("#Make PLANs");
@@ -941,6 +989,31 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
     x1[i]=m1->dens[i]-m1->ave;
    else
     x1[i]=ZERO;
+ }
+ //Laplacian
+ if(mode==3){ //Laplacian Filter
+	 for(int x=0;x<xdim;x++){
+	 for(int y=0;y<xdim;y++){
+	 for(int z=0;z<xdim;z++){
+		 int ind=z*xydim+y*xdim+x;
+		 x1[ind]=ZERO;
+		 if(m1->dens[ind]>ZERO){
+			 //6*d
+			 x1[ind]=-6.00*m1->dens[ind];
+			 //x+1,y  ,z
+			 if(x+1<xdim) x1[ind]+=m1->dens[(z  )*xydim+(y  )*xdim+(x+1)];
+			 //x-1,y  ,z
+			 if(x-1>=0)   x1[ind]+=m1->dens[(z  )*xydim+(y  )*xdim+(x-1)];
+			 //x  ,y+1,z
+			 if(y+1<xdim) x1[ind]+=m1->dens[(z  )*xydim+(y+1)*xdim+(x  )];
+			 //x  ,y-1,z
+			 if(y-1>=0)   x1[ind]+=m1->dens[(z  )*xydim+(y-1)*xdim+(x  )];
+			 //x  ,y  ,z+1
+			 if(z+1<xdim) x1[ind]+=m1->dens[(z+1)*xydim+(y  )*xdim+(x  )];
+			 //x  ,y  ,z-1
+			 if(z-1>=0)   x1[ind]+=m1->dens[(z-1)*xydim+(y  )*xdim+(x  )];
+		 }
+	 }}}
  }
 
  #pragma omp parallel
@@ -1046,6 +1119,30 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
     else
      x2[i]=ZERO;
   }
+  if(mode==3){ //Laplacian Filter
+	 for(int x=0;x<xdim;x++){
+	 for(int y=0;y<xdim;y++){
+	 for(int z=0;z<xdim;z++){
+		 int ind=z*xydim+y*xdim+x;
+		 x2[ind]=ZERO;
+		 if(mtmp->dens[ind]>ZERO){
+			 //6*d
+			 x2[ind]=-6.00*mtmp->dens[ind];
+			 //x+1,y  ,z
+			 if(x+1<xdim) x2[ind]+=mtmp->dens[(z  )*xydim+(y  )*xdim+(x+1)];
+			 //x-1,y  ,z
+			 if(x-1>=0)   x2[ind]+=mtmp->dens[(z  )*xydim+(y  )*xdim+(x-1)];
+			 //x  ,y+1,z
+			 if(y+1<xdim) x2[ind]+=mtmp->dens[(z  )*xydim+(y+1)*xdim+(x  )];
+			 //x  ,y-1,z
+			 if(y-1>=0)   x2[ind]+=mtmp->dens[(z  )*xydim+(y-1)*xdim+(x  )];
+			 //x  ,y  ,z+1
+			 if(z+1<xdim) x2[ind]+=mtmp->dens[(z+1)*xydim+(y  )*xdim+(x  )];
+			 //x  ,y  ,z-1
+			 if(z-1>=0)   x2[ind]+=mtmp->dens[(z-1)*xydim+(y  )*xdim+(x  )];
+		 }
+	 }}}
+ }
   //for(int i=0;i<xyzdim;i++) x2[i]=mtmp->vec[i][0];
   //for(int i=0;i<xyzdim;i++) y2[i]=mtmp->vec[i][1];
   //for(int i=0;i<xyzdim;i++) z2[i]=mtmp->vec[i][2];
@@ -1074,8 +1171,6 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
   tbl[job].t[2]=trans[2];
   tbl[job].sco=sco*rd3;
   printf("R %.1f %.1f %.1f Best= %d %d %d %f\n",rx,ry,rz,trans[0],trans[1],trans[2],tbl[job].sco);
-  
-
  }
 
  //STD and Ave
@@ -1211,6 +1306,30 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
     else
      x2[i]=0.00;
   }
+  if(mode==3){ //Laplacian Filter
+	 for(int x=0;x<xdim;x++){
+	 for(int y=0;y<xdim;y++){
+	 for(int z=0;z<xdim;z++){
+		 int ind=z*xydim+y*xdim+x;
+		 x2[ind]=ZERO;
+		 if(mtmp->dens[ind]>ZERO){
+			 //6*d
+			 x2[ind]=-6.00*mtmp->dens[ind];
+			 //x+1,y  ,z
+			 if(x+1<xdim) x2[ind]+=mtmp->dens[(z  )*xydim+(y  )*xdim+(x+1)];
+			 //x-1,y  ,z
+			 if(x-1>=0)   x2[ind]+=mtmp->dens[(z  )*xydim+(y  )*xdim+(x-1)];
+			 //x  ,y+1,z
+			 if(y+1<xdim) x2[ind]+=mtmp->dens[(z  )*xydim+(y+1)*xdim+(x  )];
+			 //x  ,y-1,z
+			 if(y-1>=0)   x2[ind]+=mtmp->dens[(z  )*xydim+(y-1)*xdim+(x  )];
+			 //x  ,y  ,z+1
+			 if(z+1<xdim) x2[ind]+=mtmp->dens[(z+1)*xydim+(y  )*xdim+(x  )];
+			 //x  ,y  ,z-1
+			 if(z-1>=0)   x2[ind]+=mtmp->dens[(z-1)*xydim+(y  )*xdim+(x  )];
+		 }
+	 }}}
+ }
   //for(int i=0;i<xyzdim;i++) x2[i]=mtmp->vec[i][0];
   //for(int i=0;i<xyzdim;i++) y2[i]=mtmp->vec[i][1];
   //for(int i=0;i<xyzdim;i++) z2[i]=mtmp->vec[i][2];
@@ -1280,6 +1399,32 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode){
    ShowVec3(m1,&MT_mtmp[0],TopTbl[i].t);
  }
 
+
+ //Evaluation
+ if(Emode==true){
+	 printf("##EVALUATION OF INITIAL POSITION\n");
+  int i=0;
+  double sco[5];
+  TopTbl[i].r[0]=0.00;
+  TopTbl[i].r[1]=0.00;
+  TopTbl[i].r[2]=0.00;
+
+  TopTbl[i].t[0]=0;
+  TopTbl[i].t[1]=0;
+  TopTbl[i].t[2]=0;
+
+  RotMRC(m2,&MT_mtmp[0],TopTbl[i].r[0],TopTbl[i].r[1],TopTbl[i].r[2]);
+  //Bestscore=GetScore(m1,&MT_mtmp[0],TopTbl[i].t);
+  Bestscore=GetScore2(m1,&MT_mtmp[0],TopTbl[i].t,sco);
+  TopTbl[i].sco=sco[mode+1];
+  PrintTbl(TopTbl,i,m1,m2,Ave,Std);
+  if(cmd.ShowGrid)
+   ShowVec3(m1,&MT_mtmp[0],TopTbl[i].t);
+
+ }
+
+
+
  return false;
 }
 
@@ -1289,7 +1434,6 @@ void PrintTbl(TBL *TopTbl,int i,MRC *m1,MRC *m2,double Ave,double Std){
  double mtx[3][3];
 
  printf("Std= %f Ave= %f\n",Std,Ave);
-
 	  f[0]=TopTbl[i].t[0];
 	  f[1]=TopTbl[i].t[1];
 	  f[2]=TopTbl[i].t[2];
@@ -1389,6 +1533,7 @@ double GetScore(MRC *m1, MRC *m2,int T[3]){
  return sco;
 }
 */
+
 double GetScore(MRC *m1, MRC *m2,int T[3]){
 
  int px,py,pz,t[3];
@@ -1476,5 +1621,128 @@ double GetScore(MRC *m1, MRC *m2,int T[3]){
  printf("Overlap= %.4f %d/%d CC= %f PCC= %f ",(double)Nm/(double)tot,Nm,tot,cc_sum/(std1*std2),
 		 pcc_sum/(pstd1*pstd2));
  printf("Score= %.1f\n",sco);
+ return sco;
+}
+
+double GetScore2(MRC *m1, MRC *m2,int T[3],double results[5]){
+
+ int px,py,pz,t[3];
+ int xdim=m1->xdim;
+ int xydim=m1->xdim*m1->ydim;
+ int xyzdim=m1->xdim*m1->ydim*m1->zdim;
+ int ind1,ind2;
+ int tot=0;
+ int Nm=0;
+ double s,sco=0;
+ double cc_sum=0;
+ double pcc_sum=0;
+ double lap_sum=0;
+ double std1,std2,d1,d2;
+ double pstd1,pstd2,pd1,pd2;
+ double lap1,lap2;
+ std1=std2=0;
+ int Ncc=0;
+ //int hist[20];
+
+ std1=m1->std; std2=m2->std;
+
+ pstd1=m1->std_norm_ave; pstd2=m2->std_norm_ave;
+
+ t[0]=T[0];
+ t[1]=T[1];
+ t[2]=T[2];
+
+ if(t[0]>0.5*xdim) t[0]-=xdim;
+ if(t[1]>0.5*xdim) t[1]-=xdim;
+ if(t[2]>0.5*xdim) t[2]-=xdim;
+
+ for(int x=0;x<m1->xdim;x++){
+  px=x+t[0];
+ for(int y=0;y<m1->xdim;y++){
+  py=y+t[1];
+ for(int z=0;z<m1->xdim;z++){
+  pz=z+t[2];
+  ind1=xydim*z+xdim*y+x;
+  if(m1->dens[ind1]>0.00)
+   tot++;
+
+  if(px<0||px>=xdim)
+   continue;
+  if(py<0||py>=xdim)
+   continue;
+  if(pz<0||pz>=xdim)
+   continue;
+
+  ind2=xydim*pz+xdim*py+px;
+
+
+     if(m1->dens[ind1]>0){
+      d1=m1->dens[ind1];
+      pd1=m1->dens[ind1]-m1->ave;
+     }else{
+      d1=pd1=0;
+     }
+     if(m2->dens[ind2]>0){
+      d2=m2->dens[ind2];
+      pd2=m2->dens[ind2]-m2->ave;
+     } else{
+      d2=pd2=0;
+     }
+      cc_sum+=d1*d2;
+      pcc_sum+=pd1*pd2;
+
+      	//Laplacian filter
+	if(d1>0 && d2> 0){
+	lap1=-6.00*d1;
+	lap2=-6.00*d2;
+	//x+1,y,z
+	if(x+1<xdim) 	lap1+=m1->dens[xydim*z +xdim*y +x+1];
+	if(px+1<xdim) 	lap2+=m2->dens[xydim*pz+xdim*py+px+1];
+	//x-1,y,z
+	if(x-1>=0) 	lap1+=m1->dens[xydim*z +xdim*y +x-1];
+	if(px-1>=0) 	lap2+=m2->dens[xydim*pz+xdim*py+px-1];
+	//x,y+1,z
+	if(y+1<xdim) 	lap1+=m1->dens[xydim*z +xdim*(y+1) +x];
+	if(py+1<xdim) 	lap2+=m2->dens[xydim*pz+xdim*(py+1)+px];
+	//x,y-1,z
+	if(y-1>=0) 	lap1+=m1->dens[xydim*z +xdim*(y-1) +x];
+	if(py-1>=0) 	lap2+=m2->dens[xydim*pz+xdim*(py-1)+px];
+	//x,y,z+1
+	if(z+1<xdim) 	lap1+=m1->dens[xydim*(z+1) +xdim*y +x];
+	if(pz+1<xdim) 	lap2+=m2->dens[xydim*(pz+1)+xdim*py+px];
+	//x,y,z-1
+	if(z-1>=0) 	lap1+=m1->dens[xydim*(z-1) +xdim*y +x];
+	if(pz-1>=0) 	lap2+=m2->dens[xydim*(pz-1)+xdim*py+px];
+
+	lap_sum+=lap1*lap2;
+	}
+
+  //DOT score
+  if(m2->dens[ind2]==0.00)
+   continue;
+  if(m1->dens[ind1]==0.00 && m2->dens[ind2]>0.00){
+   tot++;
+   continue;
+  }
+
+     //dot
+     s=m1->vec[ind1][0]*m2->vec[ind2][0]
+     +m1->vec[ind1][1]*m2->vec[ind2][1]
+     +m1->vec[ind1][2]*m2->vec[ind2][2];
+
+  m2->sco[ind2]=s;
+  sco+=s;
+  Nm++;
+  }}}
+ //std1=sqrt(std1);
+ //std2=sqrt(std2);
+ printf("Overlap= %.4f %d/%d CC= %f PCC= %f LAP= %f ",(double)Nm/(double)tot,Nm,tot,cc_sum/(std1*std2),
+		 pcc_sum/(pstd1*pstd2),lap_sum);
+ printf("Score= %.1f\n",sco);
+ results[0]=sco;//dot score
+ results[1]=(double)Nm;//Overlap
+ results[2]=cc_sum/(std1*std2);//CC
+ results[3]=pcc_sum/(pstd1*pstd2);//PCC
+ results[4]=lap_sum;//LAPLACIAN score
  return sco;
 }
