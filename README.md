@@ -208,7 +208,10 @@ spectrum b, blue_red, 8724_8409
 
 ## (Optional 5. Fitting by Other Scores)
 Option:
+```
 	-L	Overlap of volume.
 	-C	Linear cross-correlation (CC). Compute scalar product of the density value.
 	-P	Pearson crrelation coefficient. Density values are normalized by average of the densty for each map. Then CC is computed.
 	-F	Laplacian filter score. Laplacian filter is applied to the maps. Then CC is computed.
+```
+
