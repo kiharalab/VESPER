@@ -206,12 +206,26 @@ show spheres, 8724_8409_s7a30
 spectrum b, blue_red, 8724_8409
 ```
 
-## (Optional 5. Fitting by Other Scores)
-Option:
+## Optional 5. Fitting by Other Scores
+By default, VESPER use DOT score as the object function. But user can specify other scoring functions for map alignment.
 ```
-	-L	Overlap of volume.
-	-C	Linear cross-correlation (CC). Compute scalar product of the density value.
-	-P	Pearson crrelation coefficient. Density values are normalized by average of the densty for each map. Then CC is computed.
-	-F	Laplacian filter score. Laplacian filter is applied to the maps. Then CC is computed.
+Option:
+	-L	:Overlap of volume.
+	-C	:Linear cross-correlation (CC). Compute scalar product of the density value.
+	-P	:Pearson crrelation coefficient. Density values are normalized by average of the densty for each map. Then CC is computed.
+	-F	:Laplacian filter score. Laplacian filter is applied to the maps. Then CC is computed.
 ```
 
+## Optional 6. Computing score for the given position.
+VESPER can evaluate superimposed two maps with -E option.
+```
+Option:
+	-E	Evaluation mode of the current position
+```
+Example of Output with -E option. All Rotations are 0 degree. Translatin vector is zero.
+```
+##EVALUATION OF INITIAL POSITION
+Overlap= 0.0500 191/3820 CC= 0.417687 PCC= 0.082265 LAP= 324124.428184 Score= 176.7
+Std= 7.037618 Ave= 36.647654
+#0 R={0.0 0.0 0.0} MTX={1.000000000 0.000000000 0.000000000 0.000000000 1.000000000 0.000000000 -0.000000000 0.000000000 1.000000000} T={0.000 0.000 0.000} sco= 176.657 zsco= 19.894366
+```
