@@ -218,9 +218,18 @@ Option:
 
 ## Optional 6. Computing score for the given position.
 VESPER can evaluate superimposed two maps with -E option.
+To use -E option, VESPER requires the same map size for input maps.
+UCSF Chimera can generate the resampled by vop command.
 ```
-Option:
-	-E	Evaluation mode of the current position
+#example chimera command
+open map1.mrc
+open map2.mrc
+vop #1 resample onGrid #0
+colume #2 save resample_map2.mrc
+```
+Then, VESPER can compute DOT score between map1.mrc and resampe_map2.mrc by -E option.
+```
+./VESPER -a map1.mrc -b resample_map2.mrc -E > score.txt
 ```
 Example of Output with -E option. All Rotations are 0 degree. Translatin vector is zero.
 ```

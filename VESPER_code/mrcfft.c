@@ -263,8 +263,27 @@ bool SearchMAPfftMT(MRC *m1,MRC *m2,double ang,bool Emode){
  int Nth=omp_get_max_threads();
  int TopN=cmd.TopN;
 
- if(Emode)//Evaluation mode
-	 TopN=0;
+ if(Emode){//Evaluation mode
+  TopN=0;
+  if(m1->cent[0]!=m2->cent[0]
+   ||m1->cent[1]!=m2->cent[1]
+   ||m1->cent[2]!=m2->cent[2]
+   ||m1->orgxyz[0]!=m2->orgxyz[0]
+   ||m1->orgxyz[1]!=m2->orgxyz[1]
+   ||m1->orgxyz[2]!=m2->orgxyz[2]
+   ){
+   puts("#For Evaluation Mode");
+   puts("#Please use the same coordinate system and map size for map1 and map2.");
+   puts("#Example:");
+   puts("#In Chimera command line: open map1 and map2 as #0 and #1, then type");
+   puts("#> open map1.mrc");
+   puts("#> open map2.mrc");
+   puts("#> vop #1 resample onGrid #0");
+   puts("#> volume #2 save new.mrc");
+   puts("#Chimera will generate the resampled map2.mrc as new.mrc");
+   return true;
+  }
+ }
 
  fftwf_complex *X1,*Y1,*Z1;
  fftwf_complex *X2,*Y2,*Z2;
@@ -725,8 +744,27 @@ bool SearchMAPfftMT_OVCC(MRC *m1,MRC *m2,double ang, int mode, bool Emode){
  int xyzdim=m2->xdim*m2->ydim*m2->zdim;
  int Nth=omp_get_max_threads();
  int TopN=cmd.TopN;
- if(Emode==true)
+ if(Emode==true){
 	 TopN=0;
+  if(m1->cent[0]!=m2->cent[0]
+   ||m1->cent[1]!=m2->cent[1]
+   ||m1->cent[2]!=m2->cent[2]
+   ||m1->orgxyz[0]!=m2->orgxyz[0]
+   ||m1->orgxyz[1]!=m2->orgxyz[1]
+   ||m1->orgxyz[2]!=m2->orgxyz[2]
+   ){
+   puts("#For Evaluation Mode");
+   puts("#Please use the same coordinate system and map size for map1 and map2.");
+   puts("#Example:");
+   puts("#In Chimera command line: open map1 and map2 as #0 and #1, then type");
+   puts("#> open map1.mrc");
+   puts("#> open map2.mrc");
+   puts("#> vop #1 resample onGrid #0");
+   puts("#> volume #2 save new.mrc");
+   puts("#Chimera will generate the resampled map2.mrc as new.mrc");
+   return true;
+  }
+ }
 
  fftwf_complex *X1,*Y1,*Z1;
  fftwf_complex *X2,*Y2,*Z2;
