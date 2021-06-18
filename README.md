@@ -23,9 +23,9 @@ FFTW: http://www.fftw.org/download.html
 
 Pymol (for visualization): https://pymol.org/2/
 
-##MacOS version
+## MacOS version
+In this page, a pre-compiled executable file (VESPER_mac) is available.
 Please install gcc, fftw, llvm or openmp via brew (https://docs.brew.sh/Installation).
-
 ```
 brew install gcc
 brew install fftw
