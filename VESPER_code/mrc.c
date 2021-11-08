@@ -248,13 +248,13 @@ bool readmrc(MRC *mrc, char *filename){
  fclose(fpin);
 
 
-
+/*
  if(mrc->ncstart!=0||mrc->nrstart!=0||mrc->nsstart!=0){
   mrc->orgxyz[0]=mrc->orgxyz[0]+mrc->ncstart*mrc->widthx;
   mrc->orgxyz[1]=mrc->orgxyz[1]+mrc->nrstart*mrc->widthy;
   mrc->orgxyz[2]=mrc->orgxyz[2]+mrc->nsstart*mrc->widthz;
  }
-
+*/
 
 
  return false;
