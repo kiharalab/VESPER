@@ -6,8 +6,8 @@ import argparse
 def write_chimera_command(command_file, map1, map2, r_vector, t_vector, output_name):
 	command_file = open(command_file, 'w')
 	command_file.write('from chimera import runCommand as rc\n\n')
-	command_file.write('rc("open ' + map1 + '")\n')
-	command_file.write('rc("open ' + map2 + '")\n')
+	command_file.write('rc("open mrc:' + map1 + '")\n')
+	command_file.write('rc("open mrc:' + map2 + '")\n')
 
 	# rotate map
 	command_file.write('rc("turn x ' + r_vector[0] + ' center 0,0,0 coord #0 models #1")\n')
