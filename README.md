@@ -10,7 +10,8 @@ Contact: Daisuke Kihara (dkihara@purdue.edu)
 
 Reference: Xusi Han, Genki Terashi, Charles Christoffer, Siyang Chen, & Daisuke Kihara. VESPER: Global and Local Cryo-EM Map Alignment Using Local Density Vectors. Nature Communications 12.1 (2021): 1-12. https://www.nature.com/articles/s41467-021-22401-y
 
-Online platform: http://kiharalab.org/em-surfer/vesper.php
+Online Server: https://em.kiharalab.org/algorithm/vesper
+(Previous Online platform: http://kiharalab.org/em-surfer/vesper.php)
 
 ## Pre-required software
 Python 3: https://www.python.org/downloads/
