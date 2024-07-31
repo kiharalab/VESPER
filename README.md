@@ -16,6 +16,8 @@ Online Server: https://em.kiharalab.org/algorithm/vesper
 ## Pre-required software
 Python 3: https://www.python.org/downloads/
 
+gcc_linux-64 version 14.1
+
 Numpy: pip/conda install numpy
 
 SciPy: pip/conda install scipy
