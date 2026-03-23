@@ -90,20 +90,52 @@ optional arguments:
                         by .normzscore.
 ```                       
                         
-## 1. Compile VESPER source code.
-Firstly download VESPER code from github.
+## Quick Start (Recommended)
+`run_vesper.sh` handles environment setup, map unification, compilation, and running VESPER in a single command.
+
+On first run it will:
+1. Create a Python virtual environment (`.venv/`) and install dependencies (`numpy`, `scipy`, `mrcfile`)
+2. Compile the VESPER binary from source if it does not already exist
+3. Unify both input maps (fix axis ordering and origin offsets via `unify.py`)
+4. Run VESPER on the unified maps
+
+```
+git clone https://github.com/kiharalab/VESPER
+cd VESPER
+./run_vesper.sh -a MAP1.mrc -b MAP2.mrc [options] > output.pdb
+```
+
+**Example:**
+```
+./run_vesper.sh -a ./example_data/emd_8724.map -b ./example_data/emd_8409.map -t 0.04 -T 0.048 -s 7 -A 30 -c 5 -S > ./example_data/8724_8409_s7a30.pdb
+```
+
+All VESPER options (`-t`, `-T`, `-s`, `-A`, `-c`, `-N`, `-S`, etc.) are passed through directly.
+
+## Manual Setup
+
+### 1. Compile VESPER source code.
+Download VESPER code from github.
 ```
 git clone https://github.com/kiharalab/VESPER
 ```
-Next, change into VESPER_code directory and compile from the source codes.
+Change into VESPER_code directory and compile from the source codes.
 ```
 cd /your_path_to_VESPER/VESPER_code/
 make
 cp VESPER ../
 ```
-## 2. Identify the best fitting of two EM maps.
+
+### 2. Unify input maps.
+Before running VESPER, unify both maps to ensure consistent axis ordering and origin:
 ```
-VESPER -a [MAP1.mrc] -b [MAP2.mrc] [options] > [VESPER_output_filename]
+python unify.py -i MAP1.mrc -o MAP1_unified.mrc
+python unify.py -i MAP2.mrc -o MAP2_unified.mrc
+```
+
+### 3. Identify the best fitting of two EM maps.
+```
+VESPER -a [MAP1_unified.mrc] -b [MAP2_unified.mrc] [options] > [VESPER_output_filename]
 ```
 
 **Inputs:**
@@ -169,7 +201,7 @@ ATOM      2  CB  ALA     1     106.065 166.626 243.604  1.00  0.00
 ./VESPER -a ./example_data/emd_8724.map -b ./example_data/emd_8409.map -t 0.04 -T 0.048 -s 7 -A 30 -c 5 -S > ./example_data/8724_8409_s7a30.pdb
 ```
 
-## 3. Calculate Z-score for top 10 models in VESPER output.
+### 4. Calculate Z-score for top 10 models in VESPER output.
 ```
 python cluster_score.py -i [VESPER_output_file] -c [Clustering cutoff] -o [Output_file]
 ```
@@ -197,7 +229,7 @@ It shows the Z-score for each of top 10 models. One line for each model.
 python cluster_score.py -i ./example_data/8724_8409_s7a30.pdb
 ```
 
-## 4. Visualize the superimpositions in Pymol.
+## 5. Visualize the superimpositions in Pymol.
 To visualize the superimpositions in VESPER output, users can load the VESPER output file into Pymol and color the vectors by their fitness score. Here we take the two maps and VESPER output provided in example_data/ as an example.
 
 Firstly, run the code below from command line to open the VESPER output in  Pymol. 
@@ -217,7 +249,7 @@ show spheres, 8724_8409_s7a30
 spectrum b, blue_red, 8724_8409
 ```
 
-## Optional 5. Fitting by Other Scores
+## Optional 6. Fitting by Other Scores
 By default, VESPER use DOT score as the object function. But user can specify other scoring functions for map alignment.
 ```
 Option:
@@ -227,7 +259,7 @@ Option:
 	-F	:Laplacian filter score. Laplacian filter is applied to the maps. Then CC is computed.
 ```
 
-## Optional 6. Computing score for the given position.
+## Optional 7. Computing score for the given position.
 VESPER can evaluate superimposed two maps with -E option.
 To use -E option, VESPER requires the same map size for input maps.
 UCSF Chimera can generate the resampled by vop command.

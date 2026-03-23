@@ -1,0 +1,4 @@
+*.o
+VESPER_code/VESPER
+VESPER
+.venv/
